@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-top-bar',
@@ -9,4 +10,6 @@ import { MatIconModule } from '@angular/material/icon';
   templateUrl: './top-bar.component.html',
   styleUrl: './top-bar.component.scss',
 })
-export class TopBarComponent {}
+export class TopBarComponent {
+  authService: AuthService = inject(AuthService);
+}
