@@ -1,40 +1,45 @@
 <div class="flex flex-wrap justify-center">
   @for(p of properties; track p) {
-  <mat-card
-    (click)="navigate(p.id)"
-    class="pointer card-width margin-x-7 margin-y-10"
-  >
-    <div class="border">
-      <img class="border pic-size" src="{{ p.imgs[0] }}" />
+  <mat-card class="card-width margin-x-7 margin-y-10">
+    <div class="pointer" (click)="navigate(p.id)">
+      <div class="border">
+        <img class="border pic-size" src="{{ p.imgs[0] }}" />
+      </div>
+      <mat-card-content>
+        <div class="margin-y-3">
+          <span class="bold font-l">${{ p.priceStr }}</span>
+        </div>
+        <div class="flex align-center">
+          <span class="bold">{{ p.bed }}</span>
+          <span class="margin-left-3">bed</span>
+          <div class="pad-x-2">
+            <mat-divider class="divider" [vertical]="true"></mat-divider>
+          </div>
+          <span class="bold">{{ p.bath }}</span>
+          <span class="margin-left-3">bath</span>
+          <div class="pad-x-2">
+            <mat-divider class="divider" [vertical]="true"></mat-divider>
+          </div>
+          <span class="bold">{{ p.sqFt }}</span>
+          <span class="margin-left-3">sq. ft</span>
+        </div>
+        <div class="font-s margin-y-3 flex align-center">
+          <span class="margin-right-2">{{ p.address.street }},</span>
+          <span class="margin-right-2">{{ p.address.city }},</span>
+          <span>{{ p.address.state }}</span>
+        </div>
+      </mat-card-content>
     </div>
-    <mat-card-content>
-      <div class="margin-y-3">
-        <span class="bold font-l">${{ p.priceStr }}</span>
-      </div>
-      <div class="flex align-center">
-        <span class="bold">{{ p.bed }}</span>
-        <span class="margin-left-3">bed</span>
-        <div class="pad-x-2">
-          <mat-divider class="divider" [vertical]="true"></mat-divider>
-        </div>
-        <span class="bold">{{ p.bath }}</span>
-        <span class="margin-left-3">bath</span>
-        <div class="pad-x-2">
-          <mat-divider class="divider" [vertical]="true"></mat-divider>
-        </div>
-        <span class="bold">{{ p.sqFt }}</span>
-        <span class="margin-left-3">sq. ft</span>
-      </div>
-      <div class="font-s margin-y-3 flex align-center">
-        <span class="margin-right-2">{{ p.address.street }},</span>
-        <span class="margin-right-2">{{ p.address.city }},</span>
-        <span>{{ p.address.state }}</span>
-      </div>
-    </mat-card-content>
     @if(isAdmin) {
     <mat-card-footer>
       <div class="flex justify-center">
-        <button class="w-full" mat-flat-button>Edit</button>
+        <button
+          (click)="confirmDelete(p)"
+          class="w-full delete-button"
+          mat-flat-button
+        >
+          Delete
+        </button>
       </div>
     </mat-card-footer>
     }

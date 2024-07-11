@@ -1,0 +1,19 @@
+<mat-dialog-content>
+  <div class="margin-bot-10">
+    <span class="bold flex justify-center">Confirm Delete?</span>
+  </div>
+  <div>
+    <div class="flex justify-spread">
+      <button mat-flat-button (click)="onNoClick()" class="flex-1">
+        Cancel
+      </button>
+      <button
+        [mat-dialog-close]="true"
+        mat-flat-button
+        class="flex-1 delete-button"
+      >
+        Delete
+      </button>
+    </div>
+  </div>
+</mat-dialog-content>

@@ -8,6 +8,8 @@ import { AuthService } from '../../services/auth.service';
 import { Permission } from '../../model/permission';
 import { MatButtonModule } from '@angular/material/button';
 import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmActionComponent } from '../dialog/confirm-action/confirm-action.component';
 
 @Component({
   selector: 'app-property-list',
@@ -21,6 +23,7 @@ export class PropertyListComponent {
   utils: UtilsService = inject(UtilsService);
   authService: AuthService = inject(AuthService);
   router: Router = inject(Router);
+  dialog: MatDialog = inject(MatDialog);
 
   isAdmin: boolean = this.authService.checkUserPermission() == Permission.ADMIN;
   properties?: Property[];
@@ -35,5 +38,19 @@ export class PropertyListComponent {
 
   navigate(id: number) {
     this.router.navigate(['dashboard', 'details', id]);
+  }
+
+  deleteProperty(property: Property) {
+    this.properties = this.properties?.filter((p) => p.id != property.id);
+  }
+
+  confirmDelete(p: Property) {
+    const dialogRef = this.dialog.open(ConfirmActionComponent);
+
+    dialogRef.afterClosed().subscribe((action) => {
+      if (action && action == true) {
+        this.deleteProperty(p);
+      }
+    });
   }
 }

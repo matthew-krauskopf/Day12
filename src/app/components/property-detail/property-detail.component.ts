@@ -31,7 +31,7 @@ export class PropertyDetailComponent {
 
   propertyId?: number;
   property?: Property;
-  isAdmin: boolean = true; //this.authService.checkUserPermission() == Permission.ADMIN;
+  isAdmin: boolean = this.authService.checkUserPermission() == Permission.ADMIN;
 
   constructor() {
     this.route.paramMap.subscribe((pm: ParamMap) => {
