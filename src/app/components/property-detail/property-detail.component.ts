@@ -76,7 +76,7 @@ export class PropertyDetailComponent {
     });
 
     dialogRef.afterClosed().subscribe((form) => {
-      if (this.property) {
+      if (this.property && form) {
         this.property.bed = form.value.bed;
         this.property.bath = form.value.bath;
         this.property.sqFt = form.value.sqFt;
@@ -88,12 +88,12 @@ export class PropertyDetailComponent {
     const dialogRef = this.dialog.open(EditSellerComponent, {
       data: {
         name: this.property?.seller.name,
-        seller: this.property?.seller.phone,
+        phone: this.property?.seller.phone,
       },
     });
 
     dialogRef.afterClosed().subscribe((form) => {
-      if (this.property) {
+      if (this.property && form) {
         this.property.seller.name = form.value.name;
         this.property.seller.phone = form.value.phone;
       }

@@ -108,6 +108,11 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     cursor: pointer;
 }
 
+.save-button {
+    background-color: blue;
+    color: white;
+}
+
 @mixin generate-spacing ($upper-limit) {
     @for $i from 1 to $upper-limit {
         .pad-left-#{$i} {
