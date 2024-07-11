@@ -5,16 +5,24 @@ import { Property } from '../model/property';
   providedIn: 'root',
 })
 export class UtilsService {
-  attachPhoto(properties: Property[]) {
-    properties.forEach(
-      (p) => (p.img = 'assets/home{}.jpg'.replace('{}', String(p.id)))
-    );
+  attachPhoto(property: Property) {
+    property.imgs = [
+      'assets/homes/{}/1.webp'.replace('{}', String(property.id)),
+      'assets/homes/{}/2.webp'.replace('{}', String(property.id)),
+      'assets/homes/{}/3.webp'.replace('{}', String(property.id)),
+    ];
   }
 
-  formatPrice(properties: Property[]) {
-    properties.forEach(
-      (p) => (p.priceStr = new Intl.NumberFormat().format(p.price))
-    );
+  attachPhotos(properties: Property[]) {
+    properties.forEach(this.attachPhoto);
+  }
+
+  formatPrice(property: Property) {
+    property.priceStr = new Intl.NumberFormat().format(property.price);
+  }
+
+  formatPrices(properties: Property[]) {
+    properties.forEach(this.formatPrice);
   }
 
   constructor() {}

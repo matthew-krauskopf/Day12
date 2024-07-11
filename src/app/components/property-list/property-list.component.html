@@ -1,8 +1,11 @@
 <div class="flex flex-wrap justify-center">
   @for(p of properties; track p) {
-  <mat-card class="pointer card-width margin-x-7 margin-y-10">
+  <mat-card
+    (click)="navigate(p.id)"
+    class="pointer card-width margin-x-7 margin-y-10"
+  >
     <div class="border">
-      <img class="border pic-size" src="{{ p.img }}" />
+      <img class="border pic-size" src="{{ p.imgs[0] }}" />
     </div>
     <mat-card-content>
       <div class="margin-y-3">
@@ -28,6 +31,13 @@
         <span>{{ p.address.state }}</span>
       </div>
     </mat-card-content>
+    @if(isAdmin) {
+    <mat-card-footer>
+      <div class="flex justify-center">
+        <button class="w-full" mat-flat-button>Edit</button>
+      </div>
+    </mat-card-footer>
+    }
   </mat-card>
   }
 </div>

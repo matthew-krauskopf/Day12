@@ -19,7 +19,7 @@ export const routes: Routes = [
         component: PropertyListComponent,
       },
       {
-        path: 'properties/:id',
+        path: 'details/:id',
         component: PropertyDetailComponent,
       },
     ],

@@ -12,6 +12,12 @@ export class DbService {
   baseUrl: string = 'https://json-server-vercel-ebon.vercel.app';
   propertyEndpoint = '/properties';
 
+  fetchProperty(id: number): Observable<Property[]> {
+    return this.http
+      .get<Property[]>(this.baseUrl + this.propertyEndpoint + '?id=' + id)
+      .pipe(catchError(this.handleError<Property[]>()));
+  }
+
   fetchProperties(): Observable<Property[]> {
     return this.http
       .get<Property[]>(this.baseUrl + this.propertyEndpoint)

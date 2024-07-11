@@ -10,5 +10,9 @@ export interface Property {
   bed: number;
   bath: number;
   sqFt: number;
-  img: string;
+  imgs: string[];
+  seller: {
+    name: string;
+    phone: string;
+  };
 }

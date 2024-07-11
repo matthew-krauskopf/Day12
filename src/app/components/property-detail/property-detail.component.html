@@ -1,1 +1,63 @@
-<p>property-detail works!</p>
+@if (property) {
+<div class="margin-x-5 margin-y-5">
+  <div class="flex flex-col">
+    <div class="flex flex-wrap justify-center pad-x-5 pad-y-5">
+      @for (imgSrc of property.imgs; track imgSrc) {
+      <img class="pic border margin-x-3 margin-y-3" src="{{ imgSrc }}" />
+      }
+    </div>
+    <div class="pad-y-5 flex flex-wrap justify-spread white-bg border">
+      <div class="pad-x-8 pad-y-5">
+        <div>
+          <span class="bold font-xxl">${{ property.priceStr }}</span>
+        </div>
+        <div class="margin-y-3 flex flex-col">
+          <div>
+            <span class="">{{ property.address.street }}</span>
+          </div>
+          <div>
+            <span class="margin-right-2">{{ property.address.city }},</span>
+            <span>{{ property.address.state }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="justify-left align-center pad-x-8 pad-y-5">
+        <div class="flex align-center">
+          <mat-icon>bed</mat-icon>
+          <span class="bold margin-left-5 margin-right-2">{{
+            property.bed
+          }}</span>
+          <span>beds</span>
+        </div>
+        <div class="margin-top-3 flex align-center">
+          <mat-icon>bathtub</mat-icon>
+          <span class="bold margin-left-5 margin-right-2">{{
+            property.bath
+          }}</span>
+          <span>baths</span>
+        </div>
+        <div class="margin-top-3 flex align-center">
+          <mat-icon>square_foot</mat-icon>
+          <span class="bold margin-left-5 margin-right-2">{{
+            property.sqFt
+          }}</span>
+          <span>sq. feet</span>
+        </div>
+      </div>
+      <div class="pad-x-8 pad-y-5">
+        <div>
+          <span class="bold">Seller Info:</span>
+        </div>
+        <div class="margin-top-3 flex align-center">
+          <mat-icon>person</mat-icon>
+          <span class="margin-left-2">{{ property.seller.name }}</span>
+        </div>
+        <div class="margin-top-3 flex align-center">
+          <mat-icon>phone</mat-icon>
+          <span class="margin-left-2">{{ property.seller.phone }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+}
