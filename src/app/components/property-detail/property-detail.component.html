@@ -6,8 +6,16 @@
       <img class="pic border margin-x-3 margin-y-3" src="{{ imgSrc }}" />
       }
     </div>
-    <div class="pad-y-5 flex flex-wrap justify-spread white-bg border">
-      <div class="pad-x-8 pad-y-5">
+    <div
+      class="margin-x-3 pad-y-5 flex flex-wrap justify-spread white-bg border"
+    >
+      <div class="pad-x-8">
+        <div class="flex align-center">
+          <span class="bold font-l">Details</span>
+          @if(isAdmin) {
+          <mat-icon (click)="editDetails()" class="edit-button">edit</mat-icon>
+          }
+        </div>
         <div>
           <span class="bold font-xxl">${{ property.priceStr }}</span>
         </div>
@@ -21,7 +29,13 @@
           </div>
         </div>
       </div>
-      <div class="justify-left align-center pad-x-8 pad-y-5">
+      <div class="justify-left align-center pad-x-8">
+        <div class="flex align-center">
+          <span class="bold font-l">Layout</span>
+          @if(isAdmin) {
+          <mat-icon (click)="editLayout()" class="edit-button">edit</mat-icon>
+          }
+        </div>
         <div class="flex align-center">
           <mat-icon>bed</mat-icon>
           <span class="bold margin-left-5 margin-right-2">{{
@@ -44,9 +58,12 @@
           <span>sq. feet</span>
         </div>
       </div>
-      <div class="pad-x-8 pad-y-5">
-        <div>
-          <span class="bold">Seller Info:</span>
+      <div class="pad-x-8">
+        <div class="flex align-center">
+          <span class="bold font-l">Seller Info</span>
+          @if(isAdmin) {
+          <mat-icon (click)="editSeller()" class="edit-button">edit</mat-icon>
+          }
         </div>
         <div class="margin-top-3 flex align-center">
           <mat-icon>person</mat-icon>

@@ -1,0 +1,48 @@
+<div class="size">
+  <div class="justify-center flex">
+    <h2 mat-dialog-title>Editing Layout</h2>
+  </div>
+  <mat-dialog-content>
+    <form [formGroup]="layoutForm">
+      <div class="flex flex-col">
+        <mat-form-field>
+          <mat-label># Bedrooms</mat-label>
+          <input matInput formControlName="bed" />
+          <mat-error *ngIf="layoutForm.controls['bed'].errors as error">
+            <span *ngIf="error['required']">Bed count is required</span>
+            <span *ngIf="error['pattern']"> Bed count must be numeric </span>
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label># Bathrooms</mat-label>
+          <input matInput formControlName="bath" />
+          <mat-error *ngIf="layoutForm.controls['bath'].errors as error">
+            <span *ngIf="error['required']">Bath count is required</span>
+            <span *ngIf="error['pattern']">
+              Bath count must be a whole number or with .5
+            </span>
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Sq Feet</mat-label>
+          <input matInput formControlName="sqFt" />
+          <mat-error *ngIf="layoutForm.controls['sqFt'].errors as error">
+            <span *ngIf="error['required']">Sq. Feet is required</span>
+            <span *ngIf="error['pattern']"> Sq. Feet must be numeric </span>
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </form>
+  </mat-dialog-content>
+  <mat-dialog-actions class="flex">
+    <button class="flex-1" mat-button (click)="onNoClick()">Cancel</button>
+    <button
+      class="flex-1"
+      mat-button
+      [mat-dialog-close]="layoutForm"
+      cdkFocusInitial
+    >
+      Save
+    </button>
+  </mat-dialog-actions>
+</div>
