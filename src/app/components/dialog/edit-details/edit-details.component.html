@@ -7,12 +7,10 @@
       <div class="flex flex-col">
         <mat-form-field>
           <mat-label>Price</mat-label>
-          <input matInput formControlName="price" />
+          <input matInput type="number" step="10000" formControlName="price" />
           <mat-error *ngIf="detailsForm.controls['price'].errors as error">
             <span *ngIf="error['required']">Price is required</span>
-            <span *ngIf="error['pattern']">
-              Price must consist of only numbers
-            </span>
+            <span *ngIf="error['pattern']"> Price must be a whole number </span>
           </mat-error>
         </mat-form-field>
         <mat-form-field>
@@ -20,6 +18,7 @@
           <input matInput formControlName="street" />
           <mat-error *ngIf="detailsForm.controls['street'].errors as error">
             <span *ngIf="error['required']">Street is required</span>
+            <span *ngIf="error['pattern']"> Invalid steet name </span>
           </mat-error>
         </mat-form-field>
         <mat-form-field>
@@ -27,6 +26,7 @@
           <input matInput formControlName="city" />
           <mat-error *ngIf="detailsForm.controls['city'].errors as error">
             <span *ngIf="error['required']">City is required</span>
+            <span *ngIf="error['pattern']"> Invalid city name </span>
           </mat-error>
         </mat-form-field>
         <mat-form-field>

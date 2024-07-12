@@ -4,7 +4,6 @@ import { DbService } from '../../services/db.service';
 import { Property } from '../../model/property';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { UtilsService } from '../../services/utils.service';
-import { NotFoundComponent } from '../not-found/not-found.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { AuthService } from '../../services/auth.service';
@@ -62,6 +61,8 @@ export class PropertyDetailComponent {
         this.property.address.street = form.value.street;
         this.property.address.city = form.value.city;
         this.property.address.state = form.value.state;
+
+        this.utils.formatPrice(this.property);
       }
     });
   }
