@@ -42,7 +42,7 @@ export class EditSellerComponent {
   sellerForm: FormGroup = new FormGroup({
     name: new FormControl(this.dialogData.name, [
       Validators.required,
-      Validators.pattern('[\\w ]+'),
+      Validators.pattern('[\\w. ]+'),
     ]),
     phone: new FormControl(this.dialogData.phone, [
       Validators.required,

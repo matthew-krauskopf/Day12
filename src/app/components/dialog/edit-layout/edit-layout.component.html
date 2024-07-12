@@ -37,8 +37,8 @@
   <mat-dialog-actions class="flex">
     <button class="flex-1" mat-button (click)="onNoClick()">Cancel</button>
     <button
-      class="flex-1 save-button"
-      mat-button
+      class="flex-1"
+      mat-flat-button
       [mat-dialog-close]="layoutForm"
       cdkFocusInitial
       [disabled]="!layoutForm.valid"

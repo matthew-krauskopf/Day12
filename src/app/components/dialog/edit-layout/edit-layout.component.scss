@@ -2,7 +2,7 @@
   width: 400px;
 }
 
-.save-button {
-  background-color: blue;
-  color: white;
+.mat-mdc-unelevated-button:not(:disabled) {
+  background-color: #1707f7;
+  color: #fff;
 }

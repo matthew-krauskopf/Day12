@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable, catchError, of, tap } from 'rxjs';
 import { Property } from '../model/property';
+import { State } from '../model/state';
 
 @Injectable({
   providedIn: 'root',
@@ -11,6 +12,7 @@ export class DbService {
 
   baseUrl: string = 'https://json-server-vercel-ebon.vercel.app';
   propertyEndpoint = '/properties';
+  stateEndpoint = '/states';
 
   fetchProperty(id: number): Observable<Property[]> {
     return this.http
@@ -22,6 +24,12 @@ export class DbService {
     return this.http
       .get<Property[]>(this.baseUrl + this.propertyEndpoint)
       .pipe(catchError(this.handleError<Property[]>()));
+  }
+
+  fetchStates(): Observable<State[]> {
+    return this.http
+      .get<State[]>(this.baseUrl + this.stateEndpoint)
+      .pipe(catchError(this.handleError<State[]>()));
   }
 
   private handleError<T>(result?: T) {
