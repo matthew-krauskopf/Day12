@@ -2,12 +2,14 @@ import { Injectable, inject } from '@angular/core';
 import { Profile } from '../model/profile';
 import { Permission } from '../model/permission';
 import { Router } from '@angular/router';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  router: Router = inject(Router);
+  private router: Router = inject(Router);
+  private permissionSubject = new BehaviorSubject(this.checkUserPermission());
 
   profiles: Profile[] = [
     {
@@ -27,6 +29,7 @@ export class AuthService {
       (p) => p.username == username
     );
     if (profile.length != 0 && profile[0].password == password) {
+      this.permissionSubject.next(profile[0].permission);
       localStorage.setItem('permission', profile[0].permission.toString());
       this.router.navigate(['dashboard', 'properties']);
       return true;
@@ -37,7 +40,12 @@ export class AuthService {
 
   logout() {
     localStorage.removeItem('permission');
+    this.permissionSubject;
     this.router.navigate(['login']);
+  }
+
+  watchLoginState(): Observable<Permission> {
+    return this.permissionSubject.asObservable();
   }
 
   checkUserPermission(): Permission {

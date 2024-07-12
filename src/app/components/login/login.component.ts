@@ -13,6 +13,7 @@ import { AuthService } from '../../services/auth.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { NgIf } from '@angular/common';
+import { Permission } from '../../model/permission';
 
 @Component({
   selector: 'app-login',
@@ -46,6 +47,14 @@ export class LoginComponent {
     ]),
   });
 
+  constructor() {
+    this.authService.watchLoginState().subscribe((permission) => {
+      if (permission !== Permission.NONE) {
+        this.router.navigate(['dashboard', 'properties']);
+      }
+    });
+  }
+
   performLogin() {
     if (
       !this.authService.performLogin(
@@ -53,6 +62,7 @@ export class LoginComponent {
         this.loginForm.value.password
       )
     ) {
+      this.loginForm.markAsTouched();
       this.snackbar.open('Invalid Login Credentials', 'Close', {
         duration: 2000,
       });

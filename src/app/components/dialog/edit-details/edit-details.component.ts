@@ -53,11 +53,11 @@ export class EditDetailsComponent {
     ]),
     street: new FormControl(this.dialogData.address.street, [
       Validators.required,
-      Validators.pattern('\\w+'),
+      Validators.pattern('[\\w. ]+'),
     ]),
     city: new FormControl(this.dialogData.address.city, [
       Validators.required,
-      Validators.pattern('\\w+'),
+      Validators.pattern('[\\w. ]+'),
     ]),
     state: new FormControl(this.dialogData.address.state, [
       Validators.required,

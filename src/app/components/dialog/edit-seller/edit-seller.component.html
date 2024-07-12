@@ -10,7 +10,9 @@
           <input matInput formControlName="name" />
           <mat-error *ngIf="sellerForm.controls['name'].errors as error">
             <span *ngIf="error['required']">Name is required</span>
-            <span *ngIf="error['pattern']">Invalid Name</span>
+            <span *ngIf="error['pattern']"
+              >Invalid name. Must use only letters, spaces, or numbers</span
+            >
           </mat-error>
         </mat-form-field>
         <mat-form-field>

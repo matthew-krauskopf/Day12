@@ -25,7 +25,7 @@ export class PropertyListComponent {
   router: Router = inject(Router);
   dialog: MatDialog = inject(MatDialog);
 
-  isAdmin: boolean = this.authService.checkUserPermission() == Permission.ADMIN;
+  isAdmin: boolean = false;
   properties?: Property[];
 
   constructor() {
@@ -34,6 +34,11 @@ export class PropertyListComponent {
       this.utils.attachPhotos(this.properties);
       this.utils.formatPrices(this.properties);
     });
+    this.authService
+      .watchLoginState()
+      .subscribe(
+        (permission) => (this.isAdmin = permission === Permission.ADMIN)
+      );
   }
 
   navigate(id: number) {

@@ -18,7 +18,9 @@
           <input matInput formControlName="street" />
           <mat-error *ngIf="detailsForm.controls['street'].errors as error">
             <span *ngIf="error['required']">Street is required</span>
-            <span *ngIf="error['pattern']"> Invalid steet name </span>
+            <span *ngIf="error['pattern']"
+              >Invalid street. Must use only letters, spaces, or numbers</span
+            >
           </mat-error>
         </mat-form-field>
         <mat-form-field>
@@ -26,7 +28,9 @@
           <input matInput formControlName="city" />
           <mat-error *ngIf="detailsForm.controls['city'].errors as error">
             <span *ngIf="error['required']">City is required</span>
-            <span *ngIf="error['pattern']"> Invalid city name </span>
+            <span *ngIf="error['pattern']"
+              >Invalid city. Must use only letters, spaces, or numbers</span
+            >
           </mat-error>
         </mat-form-field>
         <mat-form-field>
