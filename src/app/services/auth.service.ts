@@ -1,14 +1,13 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Profile } from '../model/profile';
 import { Permission } from '../model/permission';
-import { Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private router: Router = inject(Router);
+  PERMISSION: string = 'permission';
   private permissionSubject = new BehaviorSubject(this.checkUserPermission());
 
   profiles: Profile[] = [
@@ -30,8 +29,7 @@ export class AuthService {
     );
     if (profile.length != 0 && profile[0].password == password) {
       this.permissionSubject.next(profile[0].permission);
-      localStorage.setItem('permission', profile[0].permission.toString());
-      this.router.navigate(['dashboard', 'properties']);
+      localStorage.setItem(this.PERMISSION, profile[0].permission.toString());
       return true;
     } else {
       return false;
@@ -39,9 +37,8 @@ export class AuthService {
   }
 
   logout() {
-    localStorage.removeItem('permission');
-    this.permissionSubject;
-    this.router.navigate(['login']);
+    localStorage.removeItem(this.PERMISSION);
+    this.permissionSubject.next(Permission.NONE);
   }
 
   watchLoginState(): Observable<Permission> {
@@ -49,7 +46,7 @@ export class AuthService {
   }
 
   checkUserPermission(): Permission {
-    const strPerm = localStorage.getItem('permission');
+    const strPerm = localStorage.getItem(this.PERMISSION);
     if (strPerm) {
       return strPerm == Permission.ADMIN.toString()
         ? Permission.ADMIN
@@ -58,6 +55,4 @@ export class AuthService {
       return Permission.NONE;
     }
   }
-
-  constructor() {}
 }

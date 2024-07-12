@@ -3,6 +3,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
+import { Permission } from '../../model/permission';
 
 @Component({
   selector: 'app-top-bar',
@@ -14,6 +15,15 @@ import { Router } from '@angular/router';
 export class TopBarComponent {
   router: Router = inject(Router);
   authService: AuthService = inject(AuthService);
+  loggedIn: boolean = false;
+
+  constructor() {
+    this.authService.watchLoginState().subscribe((permission) => {
+      if (permission === Permission.NONE) {
+        this.router.navigate(['login']);
+      }
+    });
+  }
 
   goHome() {
     this.router.navigate(['dashboard', 'properties']);
