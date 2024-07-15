@@ -1,5 +1,4 @@
-@if (property) {
-<div class="margin-x-5 margin-y-5">
+<div *ngIf="property$ | async as property" class="margin-x-5 margin-y-5">
   <div class="flex flex-col">
     <div class="flex flex-wrap justify-center pad-x-5 pad-y-5">
       @for (imgSrc of property.imgs; track imgSrc) {
@@ -12,8 +11,10 @@
       <div class="pad-x-8">
         <div class="flex align-center">
           <span class="bold font-l">Details</span>
-          @if(isAdmin) {
-          <mat-icon (click)="editDetails()" class="edit-button">edit</mat-icon>
+          @if(authService.isAdmin(permission$ | async)) {
+          <mat-icon (click)="editDetails(property)" class="edit-button"
+            >edit</mat-icon
+          >
           }
         </div>
         <div>
@@ -32,8 +33,10 @@
       <div class="justify-left align-center pad-x-8">
         <div class="flex align-center">
           <span class="bold font-l">Layout</span>
-          @if(isAdmin) {
-          <mat-icon (click)="editLayout()" class="edit-button">edit</mat-icon>
+          @if(authService.isAdmin(permission$ | async)) {
+          <mat-icon (click)="editLayout(property)" class="edit-button"
+            >edit</mat-icon
+          >
           }
         </div>
         <div class="flex align-center">
@@ -61,8 +64,10 @@
       <div class="pad-x-8">
         <div class="flex align-center">
           <span class="bold font-l">Seller Info</span>
-          @if(isAdmin) {
-          <mat-icon (click)="editSeller()" class="edit-button">edit</mat-icon>
+          @if(authService.isAdmin(permission$ | async)) {
+          <mat-icon (click)="editSeller(property)" class="edit-button"
+            >edit</mat-icon
+          >
           }
         </div>
         <div class="margin-top-3 flex align-center">
@@ -77,4 +82,3 @@
     </div>
   </div>
 </div>
-}

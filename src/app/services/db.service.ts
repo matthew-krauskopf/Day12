@@ -17,28 +17,30 @@ export class DbService {
   stateEndpoint = '/states';
 
   stateSubject = new BehaviorSubject<State[] | undefined>(undefined);
-
-  propertySubject = new BehaviorSubject<Property[] | undefined>(undefined);
+  propertySubject = new BehaviorSubject<Property | undefined>(undefined);
   propertiesSubject = new BehaviorSubject<Property[] | undefined>(undefined);
 
   loadProperty(id: number): void {
     if (this.propertiesSubject.getValue()) {
       this.propertySubject.next(
-        this.propertiesSubject.getValue()?.filter((p) => p.id == id)
+        this.propertiesSubject.getValue()?.filter((p) => p.id == id)[0]
       );
     } else {
       this.http
         .get<Property[]>(this.baseUrl + this.propertyEndpoint + '?id=' + id)
         .pipe(catchError(this.handleError<Property[]>()))
         .subscribe((p) => {
-          this.utils.attachPhotos(p);
-          this.utils.formatPrices(p);
-          this.propertySubject.next(p);
+          let property = p[0];
+          if (p[0]) {
+            this.utils.attachPhoto(property);
+            this.utils.formatPrice(property);
+            this.propertySubject.next(property);
+          }
         });
     }
   }
 
-  fetchProperty(): Observable<Property[] | undefined> {
+  fetchProperty(): Observable<Property | undefined> {
     return this.propertySubject.asObservable();
   }
 
@@ -48,7 +50,6 @@ export class DbService {
 
   loadProperties(): void {
     if (!this.propertiesSubject.getValue()) {
-      console.log('Called');
       this.http
         .get<Property[]>(this.baseUrl + this.propertyEndpoint)
         .pipe(catchError(this.handleError<Property[]>()))

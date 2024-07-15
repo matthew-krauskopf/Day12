@@ -14,6 +14,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { NgIf } from '@angular/common';
 import { Permission } from '../../model/permission';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-login',
@@ -48,11 +49,14 @@ export class LoginComponent {
   });
 
   constructor() {
-    this.authService.watchLoginState().subscribe((permission) => {
-      if (permission !== Permission.NONE) {
-        this.router.navigate(['dashboard', 'properties']);
-      }
-    });
+    this.authService
+      .watchLoginState()
+      .pipe(takeUntilDestroyed())
+      .subscribe((permission) => {
+        if (permission !== Permission.NONE) {
+          this.router.navigate(['dashboard', 'properties']);
+        }
+      });
   }
 
   performLogin() {

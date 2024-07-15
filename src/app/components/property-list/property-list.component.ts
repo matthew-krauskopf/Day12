@@ -17,6 +17,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ConfirmActionComponent } from '../dialog/confirm-action/confirm-action.component';
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-property-list',
@@ -32,18 +33,12 @@ export class PropertyListComponent implements OnInit {
   router: Router = inject(Router);
   dialog: MatDialog = inject(MatDialog);
 
-  isAdmin: boolean = false;
-  properties?: Property[];
+  permission$: Observable<Permission>;
+  properties$: Observable<Property[] | undefined>;
 
   constructor() {
-    this.db.fetchProperties().subscribe((p) => {
-      this.properties = p;
-    });
-    this.authService
-      .watchLoginState()
-      .subscribe(
-        (permission) => (this.isAdmin = permission === Permission.ADMIN)
-      );
+    this.permission$ = this.authService.watchLoginState();
+    this.properties$ = this.db.fetchProperties();
   }
 
   ngOnInit(): void {
@@ -61,10 +56,13 @@ export class PropertyListComponent implements OnInit {
   confirmDelete(p: Property) {
     const dialogRef = this.dialog.open(ConfirmActionComponent);
 
-    dialogRef.afterClosed().subscribe((action) => {
-      if (action && action == true) {
-        this.deleteProperty(p);
-      }
-    });
+    dialogRef
+      .afterClosed()
+      .pipe(takeUntilDestroyed())
+      .subscribe((action) => {
+        if (action && action == true) {
+          this.deleteProperty(p);
+        }
+      });
   }
 }

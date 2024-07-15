@@ -12,11 +12,14 @@ import { MatDialog } from '@angular/material/dialog';
 import { EditDetailsComponent } from '../dialog/edit-details/edit-details.component';
 import { EditLayoutComponent } from '../dialog/edit-layout/edit-layout.component';
 import { EditSellerComponent } from '../dialog/edit-seller/edit-seller.component';
+import { Observable } from 'rxjs';
+import { CommonModule, NgIf } from '@angular/common';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-property-detail',
   standalone: true,
-  imports: [MatCardModule, MatIconModule, MatButtonModule],
+  imports: [CommonModule, MatCardModule, MatIconModule, MatButtonModule, NgIf],
   templateUrl: './property-detail.component.html',
   styleUrl: './property-detail.component.scss',
 })
@@ -28,83 +31,68 @@ export class PropertyDetailComponent implements OnInit {
   authService: AuthService = inject(AuthService);
   dialog: MatDialog = inject(MatDialog);
 
-  property?: Property;
-  isAdmin: boolean = false;
+  property$: Observable<Property | undefined>;
+  permission$: Observable<Permission>;
 
   constructor() {
-    this.route.paramMap.subscribe((pm: ParamMap) => {
-      this.db.loadProperty(Number(pm.get('id')));
-    });
-
-    this.db.fetchProperty().subscribe((p) => {
-      if (p && p.length != 0) {
-        this.property = p[0];
-        this.utils.attachPhoto(this.property);
-        this.utils.formatPrice(this.property);
-      } else {
-        //this.router.navigate(['not-found']);
-      }
-    });
-
-    this.authService
-      .watchLoginState()
-      .subscribe(
-        (permission) => (this.isAdmin = permission === Permission.ADMIN)
-      );
+    this.permission$ = this.authService.watchLoginState();
+    this.property$ = this.db.fetchProperty();
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.db.loadProperty(this.route.snapshot.params['id']);
+  }
 
-  editDetails() {
+  editDetails(property: Property) {
     const dialogRef = this.dialog.open(EditDetailsComponent, {
       data: {
-        price: this.property?.price,
-        address: this.property?.address,
+        price: property.price,
+        address: property.address,
       },
     });
 
     dialogRef.afterClosed().subscribe((form) => {
-      if (this.property && form) {
-        this.property.price = form.value.price;
-        this.property.address.street = form.value.street;
-        this.property.address.city = form.value.city;
-        this.property.address.state = form.value.state;
+      if (property && form) {
+        property.price = form.value.price;
+        property.address.street = form.value.street;
+        property.address.city = form.value.city;
+        property.address.state = form.value.state;
 
-        this.utils.formatPrice(this.property);
+        this.utils.formatPrice(property);
       }
     });
   }
 
-  editLayout() {
+  editLayout(property: Property) {
     const dialogRef = this.dialog.open(EditLayoutComponent, {
       data: {
-        bed: this.property?.bed,
-        bath: this.property?.bath,
-        sqFt: this.property?.sqFt,
+        bed: property.bed,
+        bath: property.bath,
+        sqFt: property.sqFt,
       },
     });
 
     dialogRef.afterClosed().subscribe((form) => {
-      if (this.property && form) {
-        this.property.bed = form.value.bed;
-        this.property.bath = form.value.bath;
-        this.property.sqFt = form.value.sqFt;
+      if (property && form) {
+        property.bed = form.value.bed;
+        property.bath = form.value.bath;
+        property.sqFt = form.value.sqFt;
       }
     });
   }
 
-  editSeller() {
+  editSeller(property: Property) {
     const dialogRef = this.dialog.open(EditSellerComponent, {
       data: {
-        name: this.property?.seller.name,
-        phone: this.property?.seller.phone,
+        name: property.seller.name,
+        phone: property.seller.phone,
       },
     });
 
     dialogRef.afterClosed().subscribe((form) => {
-      if (this.property && form) {
-        this.property.seller.name = form.value.name;
-        this.property.seller.phone = form.value.phone;
+      if (property && form) {
+        property.seller.name = form.value.name;
+        property.seller.phone = form.value.phone;
       }
     });
   }

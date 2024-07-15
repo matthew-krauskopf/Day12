@@ -55,4 +55,8 @@ export class AuthService {
       return Permission.NONE;
     }
   }
+
+  isAdmin(perm: Permission | null) {
+    return perm && perm === Permission.ADMIN;
+  }
 }

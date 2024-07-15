@@ -4,6 +4,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { Permission } from '../../model/permission';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-top-bar',
@@ -18,11 +19,14 @@ export class TopBarComponent {
   loggedIn: boolean = false;
 
   constructor() {
-    this.authService.watchLoginState().subscribe((permission) => {
-      if (permission === Permission.NONE) {
-        this.router.navigate(['login']);
-      }
-    });
+    this.authService
+      .watchLoginState()
+      .pipe(takeUntilDestroyed())
+      .subscribe((permission) => {
+        if (permission === Permission.NONE) {
+          this.router.navigate(['login']);
+        }
+      });
   }
 
   goHome() {

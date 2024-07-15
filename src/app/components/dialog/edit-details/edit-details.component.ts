@@ -19,9 +19,10 @@ import {
 } from '@angular/forms'; // <-- NgModel lives here
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
-import { NgIf } from '@angular/common';
+import { CommonModule, NgIf } from '@angular/common';
 import { DbService } from '../../../services/db.service';
 import { State } from '../../../model/state';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-edit-details',
@@ -38,13 +39,14 @@ import { State } from '../../../model/state';
     NgIf,
     ReactiveFormsModule,
     MatSelectModule,
+    CommonModule,
   ],
   templateUrl: './edit-details.component.html',
   styleUrl: './edit-details.component.scss',
 })
 export class EditDetailsComponent implements OnInit {
   db: DbService = inject(DbService);
-  states: State[] | undefined = [];
+  states$: Observable<State[] | undefined> = this.db.fetchStates();
 
   detailsForm: FormGroup = new FormGroup({
     price: new FormControl(this.dialogData.price, [
@@ -75,9 +77,7 @@ export class EditDetailsComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<EditDetailsComponent>,
     @Inject(MAT_DIALOG_DATA) public dialogData: DialogInput
-  ) {
-    this.db.fetchStates().subscribe((s) => (this.states = s));
-  }
+  ) {}
 }
 
 interface DialogInput {

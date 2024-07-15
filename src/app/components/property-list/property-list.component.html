@@ -1,5 +1,5 @@
 <div class="flex flex-wrap justify-center">
-  @for(p of properties; track p) {
+  @for(p of properties$ | async; track p) {
   <mat-card class="card-width margin-x-7 margin-y-10">
     <div class="pointer" (click)="navigate(p.id)">
       <div class="border">
@@ -30,7 +30,7 @@
         </div>
       </mat-card-content>
     </div>
-    @if(isAdmin) {
+    @if(authService.isAdmin(permission$ | async)) {
     <mat-card-footer>
       <div class="flex justify-center">
         <button
