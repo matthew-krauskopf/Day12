@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { DbService } from '../../services/db.service';
 import { Property } from '../../model/property';
@@ -20,7 +20,7 @@ import { EditSellerComponent } from '../dialog/edit-seller/edit-seller.component
   templateUrl: './property-detail.component.html',
   styleUrl: './property-detail.component.scss',
 })
-export class PropertyDetailComponent {
+export class PropertyDetailComponent implements OnInit {
   db: DbService = inject(DbService);
   route: ActivatedRoute = inject(ActivatedRoute);
   router: Router = inject(Router);
@@ -28,22 +28,22 @@ export class PropertyDetailComponent {
   authService: AuthService = inject(AuthService);
   dialog: MatDialog = inject(MatDialog);
 
-  propertyId?: number;
   property?: Property;
   isAdmin: boolean = false;
 
   constructor() {
     this.route.paramMap.subscribe((pm: ParamMap) => {
-      this.propertyId = Number(pm.get('id'));
-      this.db.fetchProperty(this.propertyId).subscribe((p) => {
-        if (p.length != 0) {
-          this.property = p[0];
-          this.utils.attachPhoto(this.property);
-          this.utils.formatPrice(this.property);
-        } else {
-          this.router.navigate(['not-found']);
-        }
-      });
+      this.db.loadProperty(Number(pm.get('id')));
+    });
+
+    this.db.fetchProperty().subscribe((p) => {
+      if (p && p.length != 0) {
+        this.property = p[0];
+        this.utils.attachPhoto(this.property);
+        this.utils.formatPrice(this.property);
+      } else {
+        //this.router.navigate(['not-found']);
+      }
     });
 
     this.authService
@@ -52,6 +52,8 @@ export class PropertyDetailComponent {
         (permission) => (this.isAdmin = permission === Permission.ADMIN)
       );
   }
+
+  ngOnInit() {}
 
   editDetails() {
     const dialogRef = this.dialog.open(EditDetailsComponent, {

@@ -1,4 +1,4 @@
-import { Component, Inject, inject } from '@angular/core';
+import { Component, Inject, inject, OnInit } from '@angular/core';
 
 import {
   MAT_DIALOG_DATA,
@@ -42,9 +42,9 @@ import { State } from '../../../model/state';
   templateUrl: './edit-details.component.html',
   styleUrl: './edit-details.component.scss',
 })
-export class EditDetailsComponent {
+export class EditDetailsComponent implements OnInit {
   db: DbService = inject(DbService);
-  states: State[] = [];
+  states: State[] | undefined = [];
 
   detailsForm: FormGroup = new FormGroup({
     price: new FormControl(this.dialogData.price, [
@@ -63,6 +63,10 @@ export class EditDetailsComponent {
       Validators.required,
     ]),
   });
+
+  ngOnInit(): void {
+    this.db.loadStates();
+  }
 
   onNoClick(): void {
     this.dialogRef.close();

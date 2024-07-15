@@ -1,4 +1,9 @@
-import { Component, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  OnInit,
+} from '@angular/core';
 import { DbService } from '../../services/db.service';
 import { Property } from '../../model/property';
 import { MatCardModule } from '@angular/material/card';
@@ -10,15 +15,17 @@ import { MatButtonModule } from '@angular/material/button';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmActionComponent } from '../dialog/confirm-action/confirm-action.component';
+import { Observable } from 'rxjs';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-property-list',
   standalone: true,
-  imports: [MatCardModule, MatDividerModule, MatButtonModule],
+  imports: [CommonModule, MatCardModule, MatDividerModule, MatButtonModule],
   templateUrl: './property-list.component.html',
   styleUrl: './property-list.component.scss',
 })
-export class PropertyListComponent {
+export class PropertyListComponent implements OnInit {
   db: DbService = inject(DbService);
   utils: UtilsService = inject(UtilsService);
   authService: AuthService = inject(AuthService);
@@ -31,8 +38,6 @@ export class PropertyListComponent {
   constructor() {
     this.db.fetchProperties().subscribe((p) => {
       this.properties = p;
-      this.utils.attachPhotos(this.properties);
-      this.utils.formatPrices(this.properties);
     });
     this.authService
       .watchLoginState()
@@ -41,12 +46,16 @@ export class PropertyListComponent {
       );
   }
 
+  ngOnInit(): void {
+    this.db.loadProperties();
+  }
+
   navigate(id: number) {
     this.router.navigate(['dashboard', 'details', id]);
   }
 
   deleteProperty(property: Property) {
-    this.properties = this.properties?.filter((p) => p.id != property.id);
+    this.db.deleteProperty(property.id);
   }
 
   confirmDelete(p: Property) {
