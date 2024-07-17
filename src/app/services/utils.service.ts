@@ -17,6 +17,10 @@ export class UtilsService {
     properties.forEach(this.attachPhoto);
   }
 
+  formatPriceStr(input: number): string {
+    return new Intl.NumberFormat().format(input);
+  }
+
   formatPrice(property: Property) {
     property.priceStr = new Intl.NumberFormat().format(property.price);
   }

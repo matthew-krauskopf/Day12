@@ -45,7 +45,7 @@ export class AuthService {
     return this.permissionSubject.asObservable();
   }
 
-  checkUserPermission(): Permission {
+  private checkUserPermission(): Permission {
     const strPerm = localStorage.getItem(this.PERMISSION);
     if (strPerm) {
       return strPerm == Permission.ADMIN.toString()
@@ -54,6 +54,10 @@ export class AuthService {
     } else {
       return Permission.NONE;
     }
+  }
+
+  isLoggedIn(perm: Permission) {
+    return perm !== Permission.NONE;
   }
 
   isAdmin(perm: Permission | null) {

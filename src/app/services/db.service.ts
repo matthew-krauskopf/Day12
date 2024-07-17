@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { BehaviorSubject, Observable, catchError, of } from 'rxjs';
+import { BehaviorSubject, Observable, catchError, map, of } from 'rxjs';
 import { Property } from '../model/property';
 import { State } from '../model/state';
 import { UtilsService } from './utils.service';
@@ -28,12 +28,19 @@ export class DbService {
     } else {
       this.http
         .get<Property[]>(this.baseUrl + this.propertyEndpoint + '?id=' + id)
-        .pipe(catchError(this.handleError<Property[]>()))
+        .pipe(
+          map((properties) => {
+            properties.forEach((p) => {
+              this.utils.attachPhoto(p);
+              this.utils.formatPrice(p);
+            });
+            return properties;
+          }),
+          catchError(this.handleError<Property[]>())
+        )
         .subscribe((p) => {
           let property = p[0];
           if (p[0]) {
-            this.utils.attachPhoto(property);
-            this.utils.formatPrice(property);
             this.propertySubject.next(property);
           }
         });
@@ -52,11 +59,18 @@ export class DbService {
     if (!this.propertiesSubject.getValue()) {
       this.http
         .get<Property[]>(this.baseUrl + this.propertyEndpoint)
-        .pipe(catchError(this.handleError<Property[]>()))
-        .subscribe((p) => {
-          this.utils.attachPhotos(p);
-          this.utils.formatPrices(p);
-          this.propertiesSubject.next(p);
+        .pipe(
+          map((properties) => {
+            properties.forEach((p) => {
+              this.utils.attachPhoto(p);
+              this.utils.formatPrice(p);
+            });
+            return properties;
+          }),
+          catchError(this.handleError<Property[]>())
+        )
+        .subscribe((properties) => {
+          this.propertiesSubject.next(properties);
         });
     }
   }
