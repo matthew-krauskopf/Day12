@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  OnInit,
-} from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { DbService } from '../../services/db.service';
 import { Property } from '../../model/property';
 import { MatCardModule } from '@angular/material/card';
@@ -17,12 +12,22 @@ import { MatDialog } from '@angular/material/dialog';
 import { ConfirmActionComponent } from '../dialog/confirm-action/confirm-action.component';
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { MatIconModule } from '@angular/material/icon';
+import { AddListingComponent } from '../dialog/add-listing/add-listing.component';
+import { FormGroup } from '@angular/forms';
+import { StoreService } from '../../services/store.service';
+import { StoreType } from '../../model/storeType';
 
 @Component({
   selector: 'app-property-list',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatDividerModule, MatButtonModule],
+  imports: [
+    CommonModule,
+    MatCardModule,
+    MatDividerModule,
+    MatButtonModule,
+    MatIconModule,
+  ],
   templateUrl: './property-list.component.html',
   styleUrl: './property-list.component.scss',
 })
@@ -30,13 +35,16 @@ export class PropertyListComponent implements OnInit {
   db: DbService = inject(DbService);
   utils: UtilsService = inject(UtilsService);
   authService: AuthService = inject(AuthService);
+  storeService: StoreService = inject(StoreService);
   router: Router = inject(Router);
   dialog: MatDialog = inject(MatDialog);
 
+  user$: Observable<string | null>;
   permission$: Observable<Permission>;
   properties$: Observable<Property[] | undefined>;
 
   constructor() {
+    this.user$ = this.authService.watchUser();
     this.permission$ = this.authService.watchLoginState();
     this.properties$ = this.db.fetchProperties();
   }
@@ -56,13 +64,29 @@ export class PropertyListComponent implements OnInit {
   confirmDelete(p: Property) {
     const dialogRef = this.dialog.open(ConfirmActionComponent);
 
-    dialogRef
-      .afterClosed()
-      .pipe(takeUntilDestroyed())
-      .subscribe((action) => {
-        if (action && action == true) {
-          this.deleteProperty(p);
-        }
-      });
+    dialogRef.afterClosed().subscribe((action) => {
+      if (action && action == true) {
+        this.deleteProperty(p);
+      }
+    });
+  }
+
+  addProperty() {
+    const dialogRef = this.dialog.open(AddListingComponent);
+
+    dialogRef.afterClosed().subscribe((form: FormGroup) => {
+      if (form) {
+        this.db.addProperty(
+          this.utils.buildProperty(
+            form,
+            this.storeService.getItem(StoreType.USER) ?? 'N/A'
+          )
+        );
+      }
+    });
+  }
+
+  createdByUser(p: Property, user: string | null) {
+    return p.createdBy == user;
   }
 }

@@ -1,3 +1,12 @@
+<div class="flex justify-center">
+  <button
+    class="add-button card-width margin-x-7 margin-top-10 h-full"
+    mat-flat-button
+    (click)="addProperty()"
+  >
+    <span>Add Listing</span>
+  </button>
+</div>
 <div class="flex flex-wrap justify-center">
   @for(p of properties$ | async; track p) {
   <mat-card class="card-width margin-x-7 margin-y-10">
@@ -30,7 +39,8 @@
         </div>
       </mat-card-content>
     </div>
-    @if(authService.isAdmin(permission$ | async)) {
+    @if(authService.isAdmin(permission$ | async) || p.createdBy == (user$ |
+    async)) {
     <mat-card-footer>
       <div class="flex justify-center">
         <button

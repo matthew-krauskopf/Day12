@@ -92,6 +92,17 @@ export class DbService {
     return this.stateSubject.asObservable();
   }
 
+  addProperty(property: Property) {
+    const current: Property[] | undefined = this.propertiesSubject.getValue();
+    if (current) {
+      property.id = Math.max(...current.map((c) => c.id)) + 1;
+      this.propertiesSubject.next([...current, property]);
+    } else {
+      property.id = 1;
+      this.propertiesSubject.next([property]);
+    }
+  }
+
   private handleError<T>(result?: T) {
     return (error: any): Observable<T> => {
       console.log('Fetch failed: ', error);

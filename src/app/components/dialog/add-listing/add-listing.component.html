@@ -1,0 +1,132 @@
+<mat-dialog-content>
+  <form [formGroup]="addListingForm">
+    <div class="flex flex-wrap justify-center">
+      <div class="flex flex-col margin-x-5">
+        <span class="flex justify-center font-xl margin-bot-10">Details</span>
+        <mat-form-field>
+          <mat-label>Price</mat-label>
+          <input
+            matInput
+            type="number"
+            min="0"
+            step="10000"
+            formControlName="price"
+          />
+          <mat-error *ngIf="addListingForm.controls['price'].errors as error">
+            <span *ngIf="error['required']">Price is required</span>
+            <span *ngIf="error['pattern']"> Price must be a whole number </span>
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Street Address</mat-label>
+          <input matInput formControlName="street" />
+          <mat-error *ngIf="addListingForm.controls['street'].errors as error">
+            <span *ngIf="error['required']">Street is required</span>
+            <span *ngIf="error['pattern']">Invalid street address</span>
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>City</mat-label>
+          <input matInput formControlName="city" />
+          <mat-error *ngIf="addListingForm.controls['city'].errors as error">
+            <span *ngIf="error['required']">City is required</span>
+            <span *ngIf="error['pattern']">Invalid city</span>
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>State</mat-label>
+          <!-- <input matInput formControlName="state" /> -->
+          <mat-select formControlName="state">
+            @for (state of states$ | async; track state.name) {
+            <mat-option [value]="state.name">{{ state.name }}</mat-option>
+            }
+          </mat-select>
+          <mat-error *ngIf="addListingForm.controls['state'].errors as error">
+            <span *ngIf="error['required']">State is required</span>
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="flex flex-col margin-x-5">
+        <span class="flex justify-center font-xl margin-bot-10">Layout</span>
+        <mat-form-field>
+          <mat-label># Bedrooms</mat-label>
+          <input type="number" min="0" matInput formControlName="bed" />
+          <mat-error *ngIf="addListingForm.controls['bed'].errors as error">
+            <span *ngIf="error['required']">Bed count is required</span>
+            <span *ngIf="error['pattern']"> Bed count must be numeric </span>
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label># Bathrooms</mat-label>
+          <input
+            type="number"
+            min="0"
+            step=".5"
+            matInput
+            formControlName="bath"
+          />
+          <mat-error *ngIf="addListingForm.controls['bath'].errors as error">
+            <span *ngIf="error['required']">Bath count is required</span>
+            <span *ngIf="error['pattern']">
+              Bath count must be a whole number or with .5
+            </span>
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Sq Feet</mat-label>
+          <input
+            type="number"
+            min="0"
+            step="100"
+            matInput
+            formControlName="sqFt"
+          />
+          <mat-error *ngIf="addListingForm.controls['sqFt'].errors as error">
+            <span *ngIf="error['required']">Sq. Feet is required</span>
+            <span *ngIf="error['pattern']"> Sq. Feet must be numeric </span>
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="flex flex-col margin-x-5">
+        <span class="flex justify-center font-xl margin-bot-10">Seller</span>
+        <mat-form-field>
+          <mat-label>Seller Name</mat-label>
+          <input matInput formControlName="name" />
+          <mat-error *ngIf="addListingForm.controls['name'].errors as error">
+            <span *ngIf="error['required']">Name is required</span>
+            <span *ngIf="error['pattern']"
+              >Invalid name. Must use only letters, spaces, or numbers</span
+            >
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Phone Number</mat-label>
+          <input matInput formControlName="phone" />
+          <mat-error *ngIf="addListingForm.controls['phone'].errors as error">
+            <span *ngIf="error['required']">Phone Number is required</span>
+            <span *ngIf="error['pattern']">
+              Phone Number must follow format "555-123-4567"
+            </span>
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+  </form>
+  <div class="flex flex-wrap justify-center">
+    <button
+      mat-button
+      class="min-w margin-x-2 margin-y-2"
+      (click)="onNoClick()"
+    >
+      Cancel
+    </button>
+    <button
+      mat-flat-button
+      class="min-w margin-x-2 margin-y-2"
+      [disabled]="!addListingForm.valid"
+      [mat-dialog-close]="addListingForm"
+    >
+      Add
+    </button>
+  </div>
+</mat-dialog-content>

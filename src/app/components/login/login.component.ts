@@ -15,6 +15,7 @@ import { Router } from '@angular/router';
 import { NgIf } from '@angular/common';
 import { Permission } from '../../model/permission';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { StoreService } from '../../services/store.service';
 
 @Component({
   selector: 'app-login',
@@ -32,6 +33,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 })
 export class LoginComponent {
   authService: AuthService = inject(AuthService);
+  storeService: StoreService = inject(StoreService);
   router: Router = inject(Router);
   snackbar: MatSnackBar = inject(MatSnackBar);
 

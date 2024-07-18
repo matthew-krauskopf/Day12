@@ -2,7 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { DbService } from '../../services/db.service';
 import { Property } from '../../model/property';
-import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { UtilsService } from '../../services/utils.service';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -14,7 +14,6 @@ import { EditLayoutComponent } from '../dialog/edit-layout/edit-layout.component
 import { EditSellerComponent } from '../dialog/edit-seller/edit-seller.component';
 import { Observable } from 'rxjs';
 import { CommonModule, NgIf } from '@angular/common';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-property-detail',
@@ -31,10 +30,12 @@ export class PropertyDetailComponent implements OnInit {
   authService: AuthService = inject(AuthService);
   dialog: MatDialog = inject(MatDialog);
 
+  user$: Observable<string | null>;
   property$: Observable<Property | undefined>;
   permission$: Observable<Permission>;
 
   constructor() {
+    this.user$ = this.authService.watchUser();
     this.permission$ = this.authService.watchLoginState();
     this.property$ = this.db.fetchProperty();
   }

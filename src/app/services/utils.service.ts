@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Property } from '../model/property';
+import { FormGroup } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root',
@@ -27,6 +28,28 @@ export class UtilsService {
 
   formatPrices(properties: Property[]) {
     properties.forEach(this.formatPrice);
+  }
+
+  buildProperty(form: FormGroup, user: string): Property {
+    return {
+      id: -1,
+      price: form.value.price,
+      priceStr: this.formatPriceStr(form.value.price),
+      address: {
+        city: form.value.city,
+        state: form.value.state,
+        street: form.value.street,
+      },
+      bed: form.value.bed,
+      bath: form.value.bath,
+      sqFt: form.value.sqFt,
+      imgs: ['assets/no_img.jpg'],
+      seller: {
+        name: form.value.name,
+        phone: form.value.phone,
+      },
+      createdBy: user,
+    };
   }
 
   constructor() {}

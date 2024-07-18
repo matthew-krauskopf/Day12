@@ -11,7 +11,8 @@
       <div class="pad-x-8">
         <div class="flex align-center">
           <span class="bold font-l">Details</span>
-          @if(authService.isAdmin(permission$ | async)) {
+          @if(authService.isAdmin(permission$ | async) || property.createdBy ==
+          (user$ | async)) {
           <mat-icon (click)="editDetails(property)" class="edit-button"
             >edit</mat-icon
           >
@@ -33,7 +34,8 @@
       <div class="justify-left align-center pad-x-8">
         <div class="flex align-center">
           <span class="bold font-l">Layout</span>
-          @if(authService.isAdmin(permission$ | async)) {
+          @if(authService.isAdmin(permission$ | async) || property.createdBy ==
+          (user$ | async)) {
           <mat-icon (click)="editLayout(property)" class="edit-button"
             >edit</mat-icon
           >
@@ -64,7 +66,8 @@
       <div class="pad-x-8">
         <div class="flex align-center">
           <span class="bold font-l">Seller Info</span>
-          @if(authService.isAdmin(permission$ | async)) {
+          @if(authService.isAdmin(permission$ | async) || property.createdBy ==
+          (user$ | async)) {
           <mat-icon (click)="editSeller(property)" class="edit-button"
             >edit</mat-icon
           >

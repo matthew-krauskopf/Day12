@@ -15,4 +15,5 @@ export interface Property {
     name: string;
     phone: string;
   };
+  createdBy: string;
 }
