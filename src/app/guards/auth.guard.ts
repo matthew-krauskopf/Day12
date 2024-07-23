@@ -1,24 +1,24 @@
-import { Injectable } from '@angular/core';
-import { inject } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
-import { AuthService } from '../services/auth.service';
-import { of, switchMap } from 'rxjs';
+import { map } from 'rxjs';
 import { Permission } from '../model/permission';
+import { AuthService } from '../services/auth.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthGuard implements CanActivate {
   authService = inject(AuthService);
+  router: Router = inject(Router);
 
   canActivate() {
     return this.authService.watchLoginState().pipe(
-      switchMap((perm: Permission) => {
+      map((perm: Permission) => {
         if (this.authService.isLoggedIn(perm)) {
-          return of(true);
+          return true;
         } else {
-          inject(Router).navigate(['/login']);
-          return of(false);
+          this.router.navigate(['/login']);
+          return false;
         }
       })
     );
