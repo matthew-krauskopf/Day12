@@ -31,7 +31,7 @@ import { StoreType } from '../../model/storeType';
   templateUrl: './property-list.component.html',
   styleUrl: './property-list.component.scss',
 })
-export class PropertyListComponent implements OnInit {
+export class PropertyListComponent {
   db: DbService = inject(DbService);
   utils: UtilsService = inject(UtilsService);
   authService: AuthService = inject(AuthService);
@@ -47,10 +47,6 @@ export class PropertyListComponent implements OnInit {
     this.user$ = this.authService.watchUser();
     this.permission$ = this.authService.watchLoginState();
     this.properties$ = this.db.fetchProperties();
-  }
-
-  ngOnInit(): void {
-    this.db.loadProperties();
   }
 
   navigate(id: number) {

@@ -1,7 +1,7 @@
 export interface Property {
   id: number;
   price: number;
-  priceStr: string;
+  priceStr?: string;
   address: {
     city: string;
     state: string;
@@ -16,4 +16,5 @@ export interface Property {
     phone: string;
   };
   createdBy: string;
+  deletable?: boolean;
 }

@@ -1,33 +1,53 @@
-import { Injectable } from '@angular/core';
-import { Property } from '../model/property';
+import { inject, Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import { Permission } from '../model/permission';
+import { Property } from '../model/property';
+import { StoreType } from '../model/storeType';
+import { StoreService } from './store.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UtilsService {
-  attachPhoto(property: Property) {
-    property.imgs = [
-      'assets/homes/{}/1.webp'.replace('{}', String(property.id)),
-      'assets/homes/{}/2.webp'.replace('{}', String(property.id)),
-      'assets/homes/{}/3.webp'.replace('{}', String(property.id)),
-    ];
+  store: StoreService = inject(StoreService);
+
+  attachPhoto(property: Property): Property {
+    return {
+      ...property,
+      imgs: [
+        'assets/homes/{}/1.webp'.replace('{}', String(property.id)),
+        'assets/homes/{}/2.webp'.replace('{}', String(property.id)),
+        'assets/homes/{}/3.webp'.replace('{}', String(property.id)),
+      ],
+    };
   }
 
-  attachPhotos(properties: Property[]) {
-    properties.forEach(this.attachPhoto);
+  attachPhotos(properties: Property[]): Property[] {
+    return properties.map(this.attachPhoto);
   }
 
   formatPriceStr(input: number): string {
     return new Intl.NumberFormat().format(input);
   }
 
-  formatPrice(property: Property) {
-    property.priceStr = new Intl.NumberFormat().format(property.price);
+  formatPrice(property: Property): Property {
+    return {
+      ...property,
+      priceStr: new Intl.NumberFormat().format(property.price),
+    };
   }
 
-  formatPrices(properties: Property[]) {
-    properties.forEach(this.formatPrice);
+  formatPrices(properties: Property[]): Property[] {
+    return properties.map(this.formatPrice);
+  }
+
+  markDeletable(property: Property) {
+    return {
+      ...property,
+      deletable:
+        this.store.getItem(StoreType.USER) == property.createdBy ||
+        this.store.getItem(StoreType.PERMISSION) == Permission.ADMIN.toString(),
+    };
   }
 
   buildProperty(form: FormGroup, user: string): Property {
@@ -49,7 +69,12 @@ export class UtilsService {
         phone: form.value.phone,
       },
       createdBy: user,
+      deletable: true,
     };
+  }
+
+  processProperty(property: Property): Property {
+    return this.attachPhoto(this.formatPrice(this.markDeletable(property)));
   }
 
   constructor() {}

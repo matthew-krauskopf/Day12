@@ -61,11 +61,11 @@ export class DbService {
         .get<Property[]>(this.baseUrl + this.propertyEndpoint)
         .pipe(
           map((properties) => {
+            const newProps: Property[] = [];
             properties.forEach((p) => {
-              this.utils.attachPhoto(p);
-              this.utils.formatPrice(p);
+              newProps.push(this.utils.processProperty(p));
             });
-            return properties;
+            return newProps;
           }),
           catchError(this.handleError<Property[]>())
         )
@@ -73,6 +73,10 @@ export class DbService {
           this.propertiesSubject.next(properties);
         });
     }
+  }
+
+  unloadProperties() {
+    this.propertiesSubject.next(undefined);
   }
 
   deleteProperty(id: number) {
