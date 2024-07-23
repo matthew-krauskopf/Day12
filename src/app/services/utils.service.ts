@@ -41,10 +41,10 @@ export class UtilsService {
     return properties.map(this.formatPrice);
   }
 
-  markDeletable(property: Property) {
+  markEditable(property: Property): Property {
     return {
       ...property,
-      deletable:
+      editable:
         this.store.getItem(StoreType.USER) == property.createdBy ||
         this.store.getItem(StoreType.PERMISSION) == Permission.ADMIN.toString(),
     };
@@ -69,12 +69,12 @@ export class UtilsService {
         phone: form.value.phone,
       },
       createdBy: user,
-      deletable: true,
+      editable: true,
     };
   }
 
   processProperty(property: Property): Property {
-    return this.attachPhoto(this.formatPrice(this.markDeletable(property)));
+    return this.attachPhoto(this.formatPrice(this.markEditable(property)));
   }
 
   constructor() {}

@@ -96,15 +96,27 @@ export class DbService {
     return this.stateSubject.asObservable();
   }
 
-  addProperty(property: Property) {
+  editProperty(property: Property) {
+    this.propertySubject.next(property);
+
     const current: Property[] | undefined = this.propertiesSubject.getValue();
     if (current) {
-      property.id = Math.max(...current.map((c) => c.id)) + 1;
-      this.propertiesSubject.next([...current, property]);
-    } else {
-      property.id = 1;
-      this.propertiesSubject.next([property]);
+      const newProps = current.filter((c) => c.id != property.id);
+      newProps.push(property);
+      this.propertiesSubject.next(newProps);
     }
+  }
+
+  addProperty(property: Property) {
+    const current: Property[] | undefined = this.propertiesSubject.getValue();
+
+    const newProperty = {
+      ...property,
+      id: current ? Math.max(...current.map((c) => c.id)) + 1 : 1,
+    };
+    this.propertiesSubject.next(
+      current ? [...current, newProperty] : [newProperty]
+    );
   }
 
   private handleError<T>(result?: T) {

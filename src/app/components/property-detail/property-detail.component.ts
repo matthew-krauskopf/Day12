@@ -1,19 +1,17 @@
+import { CommonModule, NgIf } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
-import { MatCardModule } from '@angular/material/card';
-import { DbService } from '../../services/db.service';
-import { Property } from '../../model/property';
-import { ActivatedRoute, Router } from '@angular/router';
-import { UtilsService } from '../../services/utils.service';
-import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { AuthService } from '../../services/auth.service';
-import { Permission } from '../../model/permission';
+import { MatCardModule } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Observable } from 'rxjs';
+import { Property } from '../../model/property';
+import { DbService } from '../../services/db.service';
+import { UtilsService } from '../../services/utils.service';
 import { EditDetailsComponent } from '../dialog/edit-details/edit-details.component';
 import { EditLayoutComponent } from '../dialog/edit-layout/edit-layout.component';
 import { EditSellerComponent } from '../dialog/edit-seller/edit-seller.component';
-import { Observable } from 'rxjs';
-import { CommonModule, NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-property-detail',
@@ -27,16 +25,11 @@ export class PropertyDetailComponent implements OnInit {
   route: ActivatedRoute = inject(ActivatedRoute);
   router: Router = inject(Router);
   utils: UtilsService = inject(UtilsService);
-  authService: AuthService = inject(AuthService);
   dialog: MatDialog = inject(MatDialog);
 
-  user$: Observable<string | null>;
   property$: Observable<Property | undefined>;
-  permission$: Observable<Permission>;
 
   constructor() {
-    this.user$ = this.authService.watchUser();
-    this.permission$ = this.authService.watchLoginState();
     this.property$ = this.db.fetchProperty();
   }
 
@@ -54,12 +47,17 @@ export class PropertyDetailComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((form) => {
       if (property && form) {
-        property.price = form.value.price;
-        property.address.street = form.value.street;
-        property.address.city = form.value.city;
-        property.address.state = form.value.state;
-
-        this.utils.formatPrice(property);
+        this.db.editProperty(
+          this.utils.formatPrice({
+            ...property,
+            price: form.value.price,
+            address: {
+              street: form.value.street,
+              city: form.value.city,
+              state: form.value.state,
+            },
+          })
+        );
       }
     });
   }
@@ -75,9 +73,12 @@ export class PropertyDetailComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((form) => {
       if (property && form) {
-        property.bed = form.value.bed;
-        property.bath = form.value.bath;
-        property.sqFt = form.value.sqFt;
+        this.db.editProperty({
+          ...property,
+          bed: form.value.bed,
+          bath: form.value.bath,
+          sqFt: form.value.sqFt,
+        });
       }
     });
   }
@@ -92,8 +93,13 @@ export class PropertyDetailComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((form) => {
       if (property && form) {
-        property.seller.name = form.value.name;
-        property.seller.phone = form.value.phone;
+        this.db.editProperty({
+          ...property,
+          seller: {
+            name: form.value.name,
+            phone: form.value.phone,
+          },
+        });
       }
     });
   }

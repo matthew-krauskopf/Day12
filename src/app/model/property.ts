@@ -16,5 +16,5 @@ export interface Property {
     phone: string;
   };
   createdBy: string;
-  deletable?: boolean;
+  editable?: boolean;
 }
